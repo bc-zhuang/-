@@ -5,11 +5,13 @@
                 <div style="display: inline-block; float: left">
                     <template><i class="el-icon-date" style="color:#be4444"/><span style="color: #333333">{{newTime}}</span></template>
                 </div>
-                <div style="display: inline-block">
+                <div style="display: inline-block; margin-left: -100px">
                     <h1>广州市不动产网上预约中心</h1>
                 </div>
                 <div style="display: inline-block; float: right;">
-                    <el-button type="text" @click="goToLogin">登录</el-button>
+                    <div style="display: inline-block; float: right" v-if="token==null">
+                        <el-button type="text" @click="goToLogin">登录</el-button>
+                    </div>
                 </div>
             </div>
             <div style="text-align: center">
@@ -32,6 +34,7 @@ export default {
     name: "Header",
     data(){
         return {
+            token:localStorage.getItem('token'),
             newTime: "",
             navList:[
                 {name:'/Home/Main',navItem:'网站首页'},
@@ -39,6 +42,7 @@ export default {
                 {name:'/Home/Guide',navItem:'窗口指引'},
                 {name:'/Home/Notice',navItem:'公示公告'},
                 {name:'/Home/Query',navItem:'预约查询'},
+                {name:'/AdministratorLogin',navItem:'后台管理'}
             ]
         }
     },
@@ -49,7 +53,7 @@ export default {
             this.newTime = time;
         },
         goToLogin() {
-            this.$router.push('/Login')
+            this.$router.push('/UserLogin');
         },
         handleSelect(key, keypath){
 

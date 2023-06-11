@@ -13,7 +13,7 @@
                     </div>
                     <el-dropdown-menu slot="dropdown" style="margin-top:-30px;margin-left: -40px;">
                         <el-dropdown-item><i class="el-icon-info"></i>个人中心</el-dropdown-item>
-                        <el-dropdown-item><i class="el-icon-switch-button"></i>退出登录</el-dropdown-item>
+                        <el-dropdown-item @click.native="logout"><i class="el-icon-switch-button"></i>退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -28,6 +28,18 @@ export default {
         return {
             avatar: require('@/assets/images/Administrator_Avatar.jpg')
         }
+    },
+    methods:{
+        logout(){
+            this.$axios.post('/logout',this.loginForm).then(res=>{
+                console.log(res)
+                //清理数据
+                this.$store.commit('resetState');
+                //跳转到登录路由
+                this.$router.push({path:'/Home/Main'})
+            });
+        }
+
     }
 }
 </script>

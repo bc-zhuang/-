@@ -1,6 +1,12 @@
 <template xmlns="http://www.w3.org/1999/html">
     <div class="app-container">
-        <el-steps :active="active" finish-status="success" align-center style="margin-top: auto">
+        <div>
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item :to="{ path: '/' }">当前位置：首页</el-breadcrumb-item>
+                <el-breadcrumb-item>不动产预约</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <el-steps :active="active" finish-status="success" align-center style="margin-top: 15px">
             <el-step title="阅读协议"></el-step>
             <el-step title="预约填表"></el-step>
             <el-step title="选择业务"></el-step>
@@ -24,7 +30,7 @@
 
 二、无法如期前来办理的，预约人应在预约时间段结束前2个小时通过预约平台自行取消预约；无法网上自行取消的，可向提供预约服务的任一登记机构申请取消。
 
-三、预约系统提供未来14天的预约号源，每天中午12点开始放号，取消的预约号时段结束前2小时重新放回号池对外预约。
+三、预约系统提供未来7天的预约号源，每天中午12点开始放号，取消的预约号时段结束前2小时重新放回号池对外预约。
 
 四、同一手机号一天内取消预约两次及以上当天不能预约，同一个月内取消预约三次及以上当月不能预约；同一房屋同一业务类型一个月连续3次预约成功后取消办理的，当月不能再次预约。
 
@@ -32,12 +38,12 @@
 
 六、同一手机号同一时段只能预约一个登记机构。
 
-七、全部申请人须在约定日期预约时段的最后30分钟前（如：预约10：00-11：00的须于当天10：30前报到）带齐全部登记资料前往约定登记机构报到，预约下午时段的只能下午报到，逾期报到或资料不齐的预约失效。
+七、全部申请人须在约定日期预约时段的最后10分钟前（如：预约10：30-11：00的须于当天10：50前报到）带齐全部登记资料前往约定登记机构报到，预约下午时段的只能下午报到，逾期报到或资料不齐的预约失效。
 
 八、约定办理时间未按时报到的视作失约，三次失约将被纳入“失信名单”，三个月内无法进行网上预约。
             </pre>
             <el-checkbox v-model="checked" @change="changeButton">我已阅读并同意以上规则</el-checkbox>
-            <el-button style="margin-top: 12px;margin-left: 20%" type="primary"  @click="next" :disabled="changeButton">下一步</el-button>
+            <el-button style="margin-left: 20%" type="primary"  @click="next" :disabled="changeButton">下一步</el-button>
         </div>
 
         <div v-if="active==1">
@@ -67,17 +73,17 @@
                         <el-col :span="6" style="text-align: left">
                             <el-form-item label="房屋所在行政区" prop="region">
                                 <el-select v-model="ruleForm.region" placeholder="请选择行政区">
-                                    <el-option label="越秀区" value="yuexiu"></el-option>
-                                    <el-option label="海珠区" value="haizhu"></el-option>
-                                    <el-option label="荔湾区" value="liwan"></el-option>
-                                    <el-option label="天河区" value="tianhe"></el-option>
-                                    <el-option label="白云区" value="baiyun"></el-option>
-                                    <el-option label="番禺区" value="panyu"></el-option>
-                                    <el-option label="南沙区" value="nansha"></el-option>
-                                    <el-option label="增城区" value="zengcheng"></el-option>
-                                    <el-option label="从化区" value="conghua"></el-option>
-                                    <el-option label="花都区" value="huadu"></el-option>
-                                    <el-option label="黄埔区" value="huangbu"></el-option>
+                                    <el-option label="越秀区" value="1"></el-option>
+                                    <el-option label="海珠区" value="2"></el-option>
+                                    <el-option label="荔湾区" value="3"></el-option>
+                                    <el-option label="天河区" value="4"></el-option>
+                                    <el-option label="白云区" value="5"></el-option>
+                                    <el-option label="番禺区" value="6"></el-option>
+                                    <el-option label="南沙区" value="7"></el-option>
+                                    <el-option label="增城区" value="8"></el-option>
+                                    <el-option label="从化区" value="9"></el-option>
+                                    <el-option label="花都区" value="10"></el-option>
+                                    <el-option label="黄埔区" value="11"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -92,7 +98,7 @@
                     <h3 style="background-color:#FFFFCC; text-align: left; color: red">［ 提示：预约人无法按时前来现场办理业务，应提前一天自行取消预约，否则视为失约。预约人在预约业务办理结束前无法再次预约。］</h3>
                     <el-form-item style="margin-top: 20px; margin-left: -120px">
                         <el-button style="margin-top:12px; margin-right: 30px" type="primary" @click="prev">上一步</el-button>
-                        <el-button style="margin-top: 12px; margin-left: 30px" type="primary" @click="next2('ruleForm')">下一步</el-button>
+                        <el-button style="margin-top: 12px; margin-left: 30px" type="primary" @click="next">下一步</el-button>//"next2('ruleForm')"
                     </el-form-item>
                 </el-form>
             </div>
@@ -100,48 +106,104 @@
         <div v-if="active==2">
             <div>
                 <h1>选择业务</h1>
-                <div style="background-color: #99CCFF; margin-top:20px; text-align: left; font-size: 20px">
-                    <pre>姓名： {{ruleForm.name}}  身份证： {{ruleForm.id}}</pre>
+                <div style="background-color: #99CCFF; margin-top:20px; text-align: left; font-size: 20px; height: 40px">
+                    <div style="margin-top: 15px; margin-bottom: 15px">
+                        <pre>姓名： {{ruleForm.name}}  身份证： {{ruleForm.id}}</pre>
+                    </div>
                 </div>
-                <div style="background-color: #99CCFF; margin-top:20px; text-align: left; font-size: 20px">
-                    <p>{{radio}}-{{business}}</p>
+                <div style="background-color: #99CCFF; margin-top:20px; text-align: left; font-size: 20px; height: 40px">
+                    <div style="margin-top: 15px; margin-bottom: 15px">
+                        <p>{{ruleForm.firstBusiness}}-{{ruleForm.secondBusiness}}</p>
+                    </div>
                 </div>
-                <h4 style="text-align: left; margin-left: 100px">请选择业务类型</h4>
-                <div style="margin-top: 40px" class="business-radioButton">
-                    <el-radio-group v-model="radio" text-color="#333333" fill="#FF9900">
-                        <el-radio-button label="新建房屋业务" style="margin-right: 20px">新建房屋业务</el-radio-button>
-                        <el-radio-button label="存量房业务" style="margin-left: 20px">存量房业务</el-radio-button>
+                <h4 style="text-align: center; margin-right: 400px; margin-top: 10px">请选择业务类型:</h4>
+                <div style="margin-top: 10px" class="business-radioButton">
+                    <el-radio-group v-model="ruleForm.firstBusiness" text-color="#333333" fill="#FF9900">
+                        <el-radio-button label="新建房屋业务" style="margin-right: 20px" @change="changeRadio">新建房屋业务</el-radio-button>
+                        <el-radio-button label="存量房业务" style="margin-left: 20px" @change="changeRadio">存量房业务</el-radio-button>
                     </el-radio-group>
                 </div>
                 <hr style="margin-top: 20px">
-                <h4 style="margin-bottom: -10px">{{radio}}</h4>
-                <div style="margin-top: 20px">
-                    <div v-if="radio === '新建房屋业务'">
-                        <el-radio-group v-model="business">
-                            <el-row style="text-align: left; width: 100%; margin-top: 20px"><el-radio label="预售商品房登记">预售商品房登记</el-radio></el-row>
-                            <el-row style="text-align: left; width: 100%; margin-top: 20px"><el-radio label="新建商品房交易等其他建房业务">新建商品房交易等其他建房业务</el-radio></el-row>
+                <h4 style="margin-bottom: -10px">{{ruleForm.firstBusiness}}</h4>
+                <div style="margin-top: 10px">
+                    <div v-if="ruleForm.firstBusiness === '新建房屋业务'">
+                        <el-radio-group v-model="ruleForm.secondBusiness">
+                            <el-row style="text-align: left; width: 100%; margin-top: 10px"><el-radio label="预售商品房登记">预售商品房登记</el-radio></el-row>
+                            <el-row style="text-align: left; width: 100%; margin-top: 10px"><el-radio label="新建商品房交易等其他建房业务">新建商品房交易等其他建房业务</el-radio></el-row>
                         </el-radio-group>
                     </div>
-                    <div v-if="radio === '存量房业务'">
-                        <el-radio-group v-model="business">
-                            <el-row style="text-align: left; width: 100%; margin-top: 20px"><el-radio label="买卖">买卖</el-radio></el-row>
-                            <el-row style="text-align: left; width: 100%; margin-top: 20px"><el-radio label="赠与与划拨等涉税业务">赠与与划拨等涉税业务</el-radio></el-row>
-                            <el-row style="text-align: left; width: 100%; margin-top: 20px"><el-radio label="抵押及注销、析产登记、变更登记、补换证等其他二手房业务">抵押及注销、析产登记、变更登记、补换证等其他二手房业务</el-radio></el-row>
+                    <div v-if="ruleForm.firstBusiness === '存量房业务'">
+                        <el-radio-group v-model="ruleForm.secondBusiness">
+                            <el-row style="text-align: left; width: 100%; margin-top: 10px"><el-radio label="买卖">买卖</el-radio></el-row>
+                            <el-row style="text-align: left; width: 100%; margin-top: 10px"><el-radio label="赠与与划拨等涉税业务">赠与与划拨等涉税业务</el-radio></el-row>
+                            <el-row style="text-align: left; width: 100%; margin-top: 10px"><el-radio label="抵押及注销、析产登记、变更登记、补换证等其他二手房业务">抵押及注销、析产登记、变更登记、补换证等其他二手房业务</el-radio></el-row>
                         </el-radio-group>
                     </div>
                 </div>
                 <el-button style="margin-top:12px;" type="primary" @click="prev">上一步</el-button>
-                <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
+                <el-button style="margin-top: 12px;" type="primary" @click="next3">下一步</el-button>
             </div>
         </div>
         <div v-if="active==3">
-            <h1>服务窗口</h1>
+            <div>
+                <h1>服务窗口</h1>
+            </div>
+            <div style="background-color: #99CCFF; margin-top:20px; text-align: left; font-size: 20px;">
+                <pre style="margin-top: 10px">
+                    姓名： {{ruleForm.name}}  身份证： {{ruleForm.id}}
+                    房屋所属行政区:{{ruleForm.region}}
+                    预约业务:{{ruleForm.firstBusiness}}-{{ruleForm.secondBusiness}}
+                </pre>
+            </div>
+            <div style="margin-top: 20px; text-align: center">
+                <span>预约单位:  </span>
+                <el-select v-model="ruleForm.unit" placeholder="请选择预约单位">
+                    <el-option label="越秀区不动产登记中心" value="1"></el-option>
+                    <el-option label="海珠区不动产登记中心" value="2"></el-option>
+                    <el-option label="荔湾区不动产登记中心" value="3"></el-option>
+                    <el-option label="天河区不动产登记中心" value="4"></el-option>
+                    <el-option label="白云区不动产登记中心" value="5"></el-option>
+                    <el-option label="番禺区不动产登记中心" value="6"></el-option>
+                    <el-option label="南沙区不动产登记中心" value="7"></el-option>
+                    <el-option label="增城区不动产登记中心" value="8"></el-option>
+                    <el-option label="从化区不动产登记中心" value="9"></el-option>
+                    <el-option label="花都区不动产登记中心" value="10"></el-option>
+                    <el-option label="黄埔区不动产登记中心" value="11"></el-option>
+                </el-select>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <span>预约日期:  </span>
+                <el-date-picker v-model="ruleForm.date" value-format="yyyy-MM-dd" type="date" placeholder="请选择日期" :picker-options="pickerOptions"></el-date-picker>
+            </div>
+            <div style="margin-top: 20px; text-align: center">
+                <span>预约时间:  </span>
+                <el-select v-model="ruleForm.time" placeholder="请选择">
+                    <el-option v-for="item in timeOption" :key="item.value" :label="item.label" :value="item.value">
+                        <span style="float: left">{{ item.label }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">余量:{{ item.margin }}</span>
+                    </el-option>
+                </el-select>
+            </div>
+            <h3 style="background-color:#FFFFCC; text-align: left; color: red; margin-top: 20px">［ 提示：可预约时间段为每天早上09:30-11:30，下午14:30-17:30，预约时间段为30分钟，最少提前1天预约，最多可提前7天预约！］</h3>
             <el-button style="margin-top:12px;" type="primary" @click="prev">上一步</el-button>
-            <el-button style="margin-top: 12px;" type="primary" @click="submit()">提交</el-button>
+            <el-button style="margin-top: 12px;" type="primary" @click="submit">提交</el-button>
         </div>
         <div v-if="active==4">
             <h1>预约结果</h1>
-
+            <div v-if="flag==true">
+                <el-result icon="success" title="预约成功">
+                    <template slot="extra">
+                        <el-button type="primary" size="medium" @click="back">返回</el-button>
+                    </template>
+                </el-result>
+            </div>
+            <div v-if="flag==false">
+                <el-result icon="error" title="预约失败">
+                    <template slot="extra">
+                        <el-button type="primary" size="medium"  @click="back">返回</el-button>
+                    </template>
+                </el-result>
+            </div>
         </div>
 
     </div>
@@ -222,15 +284,35 @@ export default {
         return {
             active: 0,//步骤条初始化
             checked:false,
-            radio:'',
-            business:'未选择业务类型！',
+            time1:'',
+            time2:'',
+            timeOption:'',
+            flag:false,
             ruleForm:{
                 name:'',
                 id:'',
                 phone:'',
                 region:'',
                 address:'',
+                firstBusiness:'',
+                secondBusiness:'',
+                unit:'',
+                date:'',
+                time:''
             },
+
+            pickerOptions: {
+                disabledDate(time) {
+                    const dateTime = new Date()
+                    const startTime = dateTime.setDate(dateTime.getDate())
+                    const endTime = dateTime.setDate(dateTime.getDate() + 1)
+                    return (
+                        time.getTime() < new Date(startTime).getTime() ||
+                        time.getTime() > new Date(endTime).getTime()
+                    )
+                },
+            },
+
             rules:{
                 name: [
                     { required: true, message:"姓名不能为空" },
@@ -238,11 +320,11 @@ export default {
                 ],
                 phone: [
                     { required: true, message:"手机号不能为空" },
-                    { validator:checkPhone, trigger: 'blur' }
+                    { validator: checkPhone, trigger: 'blur' }
                 ],
                 id: [
                     { required: true, message:"身份证号不能为空" },
-                    { validator:checkId, trigger: 'blur' }
+                    { validator: checkId, trigger: 'blur' }
                 ],
                 region: [
                     { required: true, message: "请选择房屋所在行政区", trigger: 'blur' }
@@ -255,10 +337,9 @@ export default {
     },
 
     methods: {
-        id,
         //下一页
         next() {
-            if (this.active++ > 3) this.active = 0;
+            if (this.active++ > 4) this.active = 0;
         },
 
         //上一页
@@ -270,13 +351,63 @@ export default {
         next2(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    if (this.active++ > 3) this.active = 0;
+                    if (this.active++ > 4) this.active = 0;
                 } else {
                     console.log("error submit!");
                     return false;
                 }
             });
         },
+
+        next3() {
+            if(this.ruleForm.secondBusiness!=='未选择业务类型!'){
+                this.$axios.get('/GetAllowance').then(res=>{
+                    console.log(res.data.data)
+                    if(res.data.code==1){
+                        this.timeOption=res.data.data;
+                    }else {
+                        return false;
+                    }
+                })
+                if (this.active++ > 4) this.active = 0;
+            }else {
+                alert('未选择业务类型！')
+                console.log("error submit!");
+                return false;
+            }
+        },
+
+        submit(){
+          this.$axios.post('/submit',this.ruleForm).then(res=>{
+              console.log(res.data)
+              if(res.data.code==1){
+                  this.$message({
+                      message: '预约成功',
+                      type: 'success'
+                  });
+                  this.flag=true;
+              }else {
+                  this.$message.error('预约失败');
+              }
+              if (this.active++ > 4) this.active = 0;
+          })
+        },
+
+        back(){
+            this.$router.push('/Home/Main')
+        },
+
+        disabledDate (time) {
+            const dateTime = new Date()
+            const startTime = dateTime.setDate(dateTime.getDate() - 1)
+            const endTime = dateTime.setDate(dateTime.getDate() + 7)
+            return (
+                time.getTime() < new Date(startTime).getTime() ||
+                time.getTime() > new Date(endTime).getTime()
+            )
+        },
+
+
     },
 
     computed: {
@@ -289,6 +420,12 @@ export default {
             }
             return buttonStatus;
         },
+
+        changeRadio: function (){
+            if(this.ruleForm.firstBusiness!==null){
+                this.ruleForm.secondBusiness='未选择业务类型!';
+            }
+        },
     },
 }
 </script>
@@ -297,7 +434,7 @@ export default {
 .business-radioButton{
     .el-radio-button__inner{
         width: 200px;
-        height: 80px;
+        height: 60px;
         text-align: center;
         background-color: #00CC00;
         color: #333333;

@@ -1,156 +1,113 @@
 <template>
-    <div class="login">
-        <div class="login_form">
-            <p>不动产预约系统登录界面</p>
-            <el-tabs v-model="activeName" @tab-click="handleClick" >
-                <el-tab-pane label="登录" name="first">
-                    <el-form
-                            :model="loginForm"
-                            :rules="rules"
-                            ref="loginForm"
-                            @submit.native.prevent>
-                        <el-form-item label="" prop="account" class="elItem">
-                            <el-input
-                                    type="text"
-                                    autocomplete="off"
-                                    v-model="loginForm.account"
-                                    prefix-icon="el-icon-user-solid"
-                                    placeholder="请输入用户名">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item label="" prop="password">
-                            <el-input
-                                    type="password"
-                                    autocomplete="off"
-                                    v-model="loginForm.password"
-                                    prefix-icon="el-icon-lock"
-                                    placeholder="请输入密码">
-                            </el-input>
-                        </el-form-item>
-                        <el-form-item class="btns">
-                            <el-button type="primary" @click="goToLogin" native-type="submit">登录</el-button>
-                            <el-button @click="resetLoginForm">重置</el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-tab-pane>
-                <el-tab-pane label="注册" name="second">
-                    <register></register>
-                </el-tab-pane>
-            </el-tabs>
-        </div>
+    <div class="login-wrap">
+        <el-form  :model="loginForm" :rules="rules" ref="loginForm" class="login-container">
+            <h1 class="title">用户登录</h1>
+            <el-form-item label="账号" prop="account">
+                <el-input type="text" v-model="loginForm.account" autocomplete="off" size="small"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+                <el-input type="password" v-model="loginForm.password"  show-password autocomplete="off" size="small"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="doLogin" style="width: 100%;">登录</el-button>
+                <el-row style="text-align: center; margin-top: 10px;">
+                    <el-link type="primary" @click="toRegister">用户注册</el-link> |
+                    <el-link type="primary">忘记密码</el-link>
+                </el-row>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
 <script>
-//引入注册组件
-import register from '@/components/user/Register.vue';
 export default {
     name:'Login',
     data() {
-        var validateAccount = (rule, value, callback) => {
-            if (value === "") {
-                return callback(new Error("账号不能为空"));
-            } else if (value === "user") {
-                callback();
-            } else {
-                callback(new Error("请输入正确的用户名"));
-            }
-        };
-        var validatePassword = (rule, value, callback) => {
-            if (value === "") {
-                callback(new Error("请输入密码"));
-            } else if (value === "123456") {
-                callback();
-            } else {
-                callback(new Error("请输入正确的密码"));
-            }
-        };
         return {
             loginForm: {
-                account: "",
-                password: "",
+                account: '',
+                password: ''
             },
-            activeName:'first',//默认显示登录页面
-            rules: {
+            rules:{
                 account: [
-                    {
-                        validator: validateAccount,
-                        trigger: "blur",
-                    },
+                    { required: true, message: '请输入用户名', trigger: 'blur' },
+                    { min: 3, max: 8, message: '用户名长度在 3 到 8 个字符', trigger: 'blur' }
                 ],
                 password: [
-                    {
-                        validator: validatePassword,
-                        trigger: "blur",
-                    },
-                ],
-            },
+                    { required: true, message: '请输密码', trigger: 'blur' },
+                    { min: 6, max: 18, message: '密码长度在 6 到 18 个字符', trigger: 'blur' }
+                ]
+            }
         };
     },
     methods: {
-//固定的账户密码判断实现简单的登录跳转功能，只能测试用
-        goToLogin() {
-            this.$refs["loginForm"].validate((valid) => {
-                if (valid) {
-                    if (
-                        this.loginForm.account !== "user" ||
-                        this.loginForm.password !== "123456"
-                    ) {
-                        this.$message.error("账号密码不正确");
-                        return false;
-                    } else {
-                        this.$message({ message: "登陆成功", type: "success" });
-                        this.$router.push("/home");
-                    }
+        doLogin() {
+            this.$refs.loginForm.validate((valid) => {
+                if (valid) { //valid成功为true，失败为false
+                    this.$axios.post('/UserLogin',this.loginForm).then(res=>{
+                        console.log(res.data)
+                        if(res.data.code==1){
+                            //存储token到本地
+                            this.$store.commit("setToken",res.data.token);
+                            this.$message({
+                                message: '登录成功',
+                                type: 'success'
+                            });
+                            //跳转到主页
+                            this.$router.push('/Home/Main');
+                        }else {
+                            this.$message.error('登录失败');
+                            return false;
+                        }
+                    })
                 } else {
-                    this.$message.error("登陆失败");
+                    console.log('校验失败');
                     return false;
                 }
             });
         },
-        resetLoginForm() {
-            this.$refs["loginForm"].resetFields();
-        },
-        handleClick(){}
+
+        toRegister() {
+            this.$router.push('/UserRegister')
+        }
+
     },
-    components:{
-        register
-    }
+
+    computed:{
+        canSubmit(){
+            const {account, password} = this.loginForm
+            return Boolean(account && password)
+        },
+    },
+
 };
 </script>
 
 <style lang='less'>
-.login {
-  width: 100%;
-  height: 100vh;
-  background-image: url("../../assets/images/login.jpg");//背景图
-  background-size: 100% 100%;
-  background-position: center center;
-  overflow: auto;
-  position: relative;
-  .login_form {
-      width: 400px;
-      height: 400px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      margin-left: -200px;
-      margin-top: -150px;
-      padding: 10px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ddd;
-    .btns {
-        display: flex;
-        align-items: center;
-        justify-content: center
+.login-wrap {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding-top: 10%;
+    background-repeat: no-repeat;
+    background-position: center right;
+    background-size: 100%;
+}
 
-    }
-  }
-  p {
-    font-size: 24px;
+.login-container {
+    border-radius: 10px;
+    margin: 0px auto;
+    width: 350px;
+    padding: 30px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    text-align: left;
+    box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    margin: 0px auto 40px auto;
     text-align: center;
-    font-weight: 600;
-  }
+    color: #505458;
 }
 </style>
