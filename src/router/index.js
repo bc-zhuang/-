@@ -73,7 +73,12 @@ axios.interceptors.request.use(
     function (config) {
         var Token = localStorage.getItem('token');
         if(Token){
-            config.headers['Authorization'] = 'Bearer' + Token;
+            config.headers['Authorization'] = Token;
+        }
+
+        if(config.method === 'post') { // 判断如果是post请求, 配置content-type
+            config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            return config;
         }
         return config;
     },

@@ -66,12 +66,12 @@ export default {
                     path:'/Index/UserInfo',
                     child: [
                         {
-                            name:'查询用户信息',
+                            name:'查询用户实名信息',
                             icon:'el-icon-s-custom',
                             path:'/Index/UserInfo'
                         },
                         {
-                            name:'修改用户信息',
+                            name:'查询用户账号信息',
                             icon:'el-icon-s-custom',
                             path:'/Index/UserState'
                         }

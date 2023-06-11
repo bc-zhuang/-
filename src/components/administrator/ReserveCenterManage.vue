@@ -10,13 +10,13 @@
             <h3>维护登记中心信息</h3>
         </div>
         <div style="margin-top: 20px">
-            <el-dialog title="修改预约" :visible="dialogFormVisible" width="30%" :visible.sync="dialogFormVisible">
+            <el-dialog title="修改信息" :visible="dialogFormVisible" width="30%" :visible.sync="dialogFormVisible">
                 <el-form ref="changeForm" :model="changeForm" :rules="rules" label-width="80px">
-                    <el-form-item label="编号" prop="cId">
-                        <el-input size="small" type="text" :disabled="true" v-model="changeForm.cId"></el-input>
+                  <el-form-item label="编号" prop="id">
+                        <el-input size="small" type="text" :disabled="true" v-model="changeForm.id"></el-input>
                     </el-form-item>
-                    <el-form-item label="登记单位" prop="unit">
-                        <el-input size="small" type="text" v-model="changeForm.unit"></el-input>
+                    <el-form-item label="登记单位" prop="name">
+                        <el-input size="small" type="text" v-model="changeForm.name"></el-input>
                     </el-form-item>
                     <el-form-item label="联系电话" prop="phone">
                         <el-input size="small" type="text" v-model="changeForm.phone"></el-input>
@@ -25,7 +25,7 @@
                         <el-input size="small" type="text" v-model="changeForm.address"></el-input>
                     </el-form-item>
                     <el-form-item style="margin-left: -80px">
-                            <el-button type="primary" @click="changeCenter">立即修改</el-button>
+                          <el-button type="primary" @click="changeCenter">立即修改</el-button>
                             <el-button @click="resetForm('changeForm')">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -34,8 +34,8 @@
         <div>
             <el-card class="showCard" shadow="never">
                 <el-table :data="datalist" stripe style="width: 100%">
-                    <el-table-column prop="cId" label="编号"></el-table-column><!--预约号-->
-                    <el-table-column prop="unit" label="登记单位名"></el-table-column><!--姓名-->
+                    <el-table-column prop="id" label="编号"></el-table-column><!--预约号-->
+                    <el-table-column prop="name" label="登记单位名"></el-table-column><!--姓名-->
                     <el-table-column prop="phone" label="联系电话"></el-table-column><!--预约单位-->
                     <el-table-column prop="address" label="地址"></el-table-column><!--状态-->
                     <el-table-column label="操作">
@@ -57,8 +57,8 @@ export default {
             datalist:[],
             dialogFormVisible:false,
             changeForm:{
-                cId:'',
-                unit:'',
+                id:'',
+                name:'',
                 phone:'',
                 address:''
             },
@@ -74,10 +74,10 @@ export default {
 
     methods:{
         getCenter(){
-            this.$axios.get('/getCenter').then(res=>{
+            this.$axios.get('http://localhost:8050/admin-service/adminService/registrationcenter/selectAll').then(res=>{
                 console.log(res.data);
                 if(res.data.code==1){
-                    this.datalist=res.data.data;
+                    this.datalist=res.data.data.list;
                 }else {
                     return false;
                 }
@@ -89,7 +89,10 @@ export default {
         },
 
         openDialogFormVisible(row){
-            this.changeForm.cId=row.cId;
+            this.changeForm.id=row.id;
+            this.changeForm.name=row.name;
+            this.changeForm.phone=row.phone;
+            this.changeForm.address=row.address;
             this.dialogFormVisible=true;
         },
 
@@ -102,7 +105,7 @@ export default {
             }).then(()=>{
                 this.$refs.changeForm.validate((valid) =>{
                     if(valid) {
-                        this.$axios.post('/changeCenter',this.changeForm).then(res=>{
+                        this.$axios.post('http://localhost:8050/admin-service/adminService/registrationcenter/change',this.changeForm).then(res=>{
                             console.log(res.data)
                             if(res.data.code==1){
                                 this.$message({

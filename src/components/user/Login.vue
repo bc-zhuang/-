@@ -2,11 +2,11 @@
     <div class="login-wrap">
         <el-form  :model="loginForm" :rules="rules" ref="loginForm" class="login-container">
             <h1 class="title">用户登录</h1>
-            <el-form-item label="账号" prop="account">
-                <el-input type="text" v-model="loginForm.account" autocomplete="off" size="small"></el-input>
+            <el-form-item label="账号" prop="userName">
+                <el-input type="text" v-model="loginForm.userName" autocomplete="off" size="small"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input type="password" v-model="loginForm.password"  show-password autocomplete="off" size="small"></el-input>
+            <el-form-item label="密码" prop="passWord">
+                <el-input type="password" v-model="loginForm.passWord"  show-password autocomplete="off" size="small"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="doLogin" style="width: 100%;">登录</el-button>
@@ -25,15 +25,15 @@ export default {
     data() {
         return {
             loginForm: {
-                account: '',
-                password: ''
+                userName: '',
+                passWord: ''
             },
             rules:{
-                account: [
+                userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
                     { min: 3, max: 8, message: '用户名长度在 3 到 8 个字符', trigger: 'blur' }
                 ],
-                password: [
+                passWord: [
                     { required: true, message: '请输密码', trigger: 'blur' },
                     { min: 6, max: 18, message: '密码长度在 6 到 18 个字符', trigger: 'blur' }
                 ]
@@ -44,7 +44,7 @@ export default {
         doLogin() {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) { //valid成功为true，失败为false
-                    this.$axios.post('/UserLogin',this.loginForm).then(res=>{
+                    this.$axios.post('http://localhost:8050/user-service/user/login',this.loginForm).then(res=>{
                         console.log(res.data)
                         if(res.data.code==1){
                             //存储token到本地

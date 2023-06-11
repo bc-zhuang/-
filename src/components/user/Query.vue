@@ -286,7 +286,20 @@ export default {
                     return false;
                 }
             })
-        }
+        },
+
+      getCenter(){
+        // this.$axios.post('http://localhost:8050/reservation-service/reservationService/reservationinformation/selectAll').then(res=>{
+        this.$axios.get('http://localhost:8050/reservation-service/reservationService/reservationinformation/selectAll').then(res=>{
+          console.log(res.data);
+          if(res.data.code==1){
+            this.datalist=res.data.data;
+          }else {
+            return false
+          }
+        })
+      },
+
     },
 
     computed:{
@@ -298,7 +311,8 @@ export default {
     },
 
     mounted:function () {
-        this.getAllowance()
+        this.getAllowance();
+        this.getCenter();
     }
 }
 </script>

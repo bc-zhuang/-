@@ -5,12 +5,12 @@
                 <h1 class="login-title">不动产后台管理系统登录</h1>
                 <el-form :model="loginForm" label-width="100px"
                          :rules="rules" ref="loginForm">
-                    <el-form-item label="账号" prop="username">
-                        <el-input style="width: 200px" type="text" v-model="loginForm.username"
+                    <el-form-item label="账号" prop="userName">
+                        <el-input style="width: 200px" type="text" v-model="loginForm.userName"
                                   autocomplete="off" size="small"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码" prop="password">
-                        <el-input style="width: 200px" type="password" v-model="loginForm.password"
+                    <el-form-item label="密码" prop="passWord">
+                        <el-input style="width: 200px" type="password" v-model="loginForm.passWord"
                                   show-password autocomplete="off" size="small"></el-input>
                     </el-form-item>
                     <el-form-item>
@@ -29,17 +29,17 @@ export default {
     data(){
         return{
             loginForm:{
-                username:'',
-                password:''
+                userName:'',
+                passWord:''
             },
             rules:{
-                username: [
+                userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
                     { min: 3, max: 8, message: '用户名长度在 3 到 8 个字符', trigger: 'blur' }
                 ],
-                password: [
+                passWord: [
                     { required: true, message: '请输密码', trigger: 'blur' },
-                    { min: 6, max: 18, message: '密码长度在 6 到 18 个字符', trigger: 'blur' }
+                    { min: 3, max: 18, message: '密码长度在 6 到 18 个字符', trigger: 'blur' }
                 ]
             }
         }
@@ -48,11 +48,11 @@ export default {
         confirm(){
             this.$refs.loginForm.validate((valid) => {
                 if (valid) { //valid成功为true，失败为false
-                    this.$axios.post('/AdministratorLogin',this.loginForm).then(res=>{
+                    this.$axios.post('http://localhost:8050/admin-service/admin/login',this.loginForm).then(res=>{
                         console.log(res.data)
                         if(res.data.code==1){
                             //存储token到本地
-                            this.$store.commit("setToken",res.data.Data.token);
+                            this.$store.commit("setToken",res.data.data.token);
                             this.$message({
                                 message: '登录成功',
                                 type: 'success'
